@@ -18,8 +18,8 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void createUsersTable() {
-        try (Statement stmnt = getConn().createStatement()){
-            stmnt.executeUpdate(CREATE_TABLE);
+        try (Statement statement = getConn().createStatement()){
+            statement.executeUpdate(CREATE_TABLE);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -27,8 +27,8 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void dropUsersTable() {
-        try (Statement stmnt = getConn().createStatement()){
-            stmnt.executeUpdate(DROP_TABLE);
+        try (Statement statement = getConn().createStatement()){
+            statement.executeUpdate(DROP_TABLE);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -37,12 +37,12 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        try (PreparedStatement pstmt = getConn().prepareStatement(INSERT_INTO)){
-            pstmt.setString(1, name);
-            pstmt.setString(2, lastName);
-            pstmt.setByte(3, age);
+        try (PreparedStatement preparedStatement = getConn().prepareStatement(INSERT_INTO)){
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, lastName);
+            preparedStatement.setByte(3, age);
 
-            pstmt.executeUpdate();
+            preparedStatement.executeUpdate();
             System.out.println("User с именем - " + name + " добавлен в базу данных");
 
         } catch (SQLException e) {
@@ -51,9 +51,9 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void removeUserById(long id) {
-        try (PreparedStatement pstmt = getConn().prepareStatement(DELETE_FROM)){
-            pstmt.setLong(1, id);
-            pstmt.executeUpdate();
+        try (PreparedStatement preparedStatement = getConn().prepareStatement(DELETE_FROM)){
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -64,12 +64,12 @@ public class UserDaoJDBCImpl implements UserDao {
     public List<User> getAllUsers() {
         List <User> list = new ArrayList<>();
 
-        try (ResultSet rs = getConn().createStatement().executeQuery("SELECT * FROM users")){
+        try (ResultSet resultSet = getConn().createStatement().executeQuery("SELECT * FROM users")){
 
-            while(rs.next()){
-                String name = rs.getString(2);
-                String lastName = rs.getString(3);
-                byte age = rs.getByte(4);
+            while(resultSet.next()){
+                String name = resultSet.getString(2);
+                String lastName = resultSet.getString(3);
+                byte age = resultSet.getByte(4);
 
                 User user = new User(name, lastName, age);
                 list.add(user);
@@ -87,8 +87,8 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void cleanUsersTable() {
-        try (Statement stmnt = getConn().createStatement()){
-            stmnt.executeUpdate(CLEAN);
+        try (Statement statement = getConn().createStatement()){
+            statement.executeUpdate(CLEAN);
         } catch (SQLException e) {
             e.printStackTrace();
         }
