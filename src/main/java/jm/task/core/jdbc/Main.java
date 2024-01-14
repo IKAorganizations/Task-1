@@ -17,29 +17,22 @@ import static jm.task.core.jdbc.util.Util.getSession;
 
 public class Main {
     public static void main(String[] args) {
-//        UserService userService = new UserServiceImpl();
+        UserService userService = new UserServiceImpl();
 
-//        userService.createUsersTable();
-//
-//        userService.saveUser("Ivan", "Ivanov", (byte) 16);
-//        userService.saveUser("Petr", "Petrov", (byte) 24);
-//        userService.saveUser("Jim", "Kerry", (byte) 45);
-//        userService.saveUser("Jack", "Daniels", (byte) 18);
-//
-//        userService.getAllUsers();
-//
-//        userService.dropUsersTable();
+        userService.createUsersTable();
+
+        userService.saveUser("Ivan", "Ivanov", (byte) 16);
+        userService.saveUser("Petr", "Petrov", (byte) 24);
+        userService.saveUser("Jim", "Kerry", (byte) 45);
+        userService.saveUser("Jack", "Daniels", (byte) 18);
+
+        userService.getAllUsers();
+
+        userService.dropUsersTable();
 
 
-//
 
-        UserDaoHibernateImpl hib = new UserDaoHibernateImpl();
 
-//        hib.createUsersTable();
-
-//
-        hib.saveUser("Jim", "Bim", (byte) 45 );
-          hib.getAllUsers();
 
         }
 }
