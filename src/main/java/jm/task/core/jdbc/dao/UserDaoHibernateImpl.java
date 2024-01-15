@@ -19,7 +19,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void createUsersTable() {
         Session session = getSession().openSession();
         Transaction transaction = session.getTransaction();
-        try {
+        try (session) {
             transaction.begin();
 
             Query query = session.createSQLQuery(CREATE_TABLE).addEntity(User.class);
@@ -30,10 +30,6 @@ public class UserDaoHibernateImpl implements UserDao {
         } catch(HibernateException e) {
             if(transaction != null)
                 transaction.rollback();
-                    }
-
-        finally {
-            getSession().close();
         }
 
     }
@@ -43,7 +39,7 @@ public class UserDaoHibernateImpl implements UserDao {
         Session session = getSession().openSession();
         Transaction transaction = session.getTransaction();
 
-        try {
+        try (session){
             transaction.begin();
 
             Query query = session.createSQLQuery(DROP_TABLE).addEntity(User.class);
@@ -53,8 +49,6 @@ public class UserDaoHibernateImpl implements UserDao {
         } catch (HibernateException e){
             if(transaction != null)
                 transaction.rollback();
-        } finally {
-            getSession().close();
         }
 
     }
@@ -63,7 +57,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void saveUser(String name, String lastName, byte age) {
         Session session = getSession().openSession();
         Transaction transaction = session.getTransaction();
-        try{
+        try (session){
             transaction.begin();
 
             User user = new User(name, lastName, age);
@@ -73,10 +67,7 @@ public class UserDaoHibernateImpl implements UserDao {
         } catch (HibernateException e){
             if (transaction != null)
                 transaction.rollback();
-        } finally {
-            getSession().close();
-
-    }
+        }
 
     }
 
@@ -84,7 +75,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void removeUserById(long id) {
         Session session = getSession().openSession();
         Transaction transaction = session.getTransaction();
-        try{
+        try (session){
             transaction.begin();
 
             session.delete(session.get(User.class, id));
@@ -94,8 +85,6 @@ public class UserDaoHibernateImpl implements UserDao {
         } catch (HibernateException e) {
             if (transaction != null)
                 transaction.rollback();
-        } finally {
-            getSession().close();
         }
 
     }
