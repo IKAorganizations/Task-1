@@ -1,35 +1,97 @@
 package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
+import org.hibernate.boot.model.source.spi.SingularAttributeSourceToOne;
 
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
+
+import static jm.task.core.jdbc.util.Util.*;
+import static jm.task.core.jdbc.util.Util.CREATE_TABLE;
 
 public class UserDaoJDBCImpl implements UserDao {
+
     public UserDaoJDBCImpl() {
 
     }
 
     public void createUsersTable() {
+        try (Statement statement = getConn().createStatement()){
+            statement.executeUpdate(CREATE_TABLE);
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void dropUsersTable() {
+        try (Statement statement = getConn().createStatement()){
+            statement.executeUpdate(DROP_TABLE);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
     public void saveUser(String name, String lastName, byte age) {
+        try (PreparedStatement preparedStatement = getConn().prepareStatement(INSERT_INTO)){
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, lastName);
+            preparedStatement.setByte(3, age);
 
+            preparedStatement.executeUpdate();
+            System.out.println("User с именем - " + name + " добавлен в базу данных");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void removeUserById(long id) {
+        try (PreparedStatement preparedStatement = getConn().prepareStatement(DELETE_FROM)){
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
     public List<User> getAllUsers() {
-        return null;
+        List <User> list = new ArrayList<>();
+
+        try (ResultSet resultSet = getConn().createStatement().executeQuery("SELECT * FROM users")){
+
+            while(resultSet.next()){
+                String name = resultSet.getString(2);
+                String lastName = resultSet.getString(3);
+                byte age = resultSet.getByte(4);
+
+                User user = new User(name, lastName, age);
+                list.add(user);
+            }
+
+            for(User user : list){
+                System.out.println(user);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
     }
 
     public void cleanUsersTable() {
+        try (Statement statement = getConn().createStatement()){
+            statement.executeUpdate(CLEAN);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 }
